@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+
+import stripe_invoice_bot
+
+print(stripe_invoice_bot.main())

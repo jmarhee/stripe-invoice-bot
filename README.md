@@ -2,6 +2,8 @@
 
 A Python-powered Discord bot to create customers and invoices with Stripe.
 
+![arthur from 2001 series "the tick"](https://www.syfy.com/sites/blastr/files/images/assets_c/2011/12/the-tick-david-burke-thumb-330x440-79351.jpg)
+
 ## Setup
 
 This requires, both, a Stripe API token and a [Discord Bot Token](https://medium.com/better-programming/coding-a-discord-bot-with-python-64da9d6cade7).

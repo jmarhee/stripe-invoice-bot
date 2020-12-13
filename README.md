@@ -27,6 +27,30 @@ docker run -d --name stripe-invoice-bot -e STRIPE_API_TOKEN=$STRIPE_API_TOKEN \
 stripe-invoice-bot
 ```
 
+## Running the Bot
+
+You can, either, build the Dockerfile (using `docker build -t stripe-invoice-bot .`) or install the package using `pip`:
+
+```
+python3 -m pip install git+https://git-central.openfunction.co/jmarhee/stripe-invoice-bot.git@main
+```
+
+then running `stripe-invoice-bot` to start the bot process. It is recommended that this be managed by something like `supervisord` or another process manager.
+
+If you are a supervisord user, a configuration like this should suffice:
+
+```
+[program:stripe-invoice-bot]
+command=${YOUR_PYTHON_PKGS_PATH}/bin/stripe-invoice-bot 
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/stripe-invoice-bot.err.log
+stdout_logfile=/var/log/stripe-invoice-bot.out.log
+environment=DISCORD_TOKEN="",DISCORD_APPROVED_BOT="",STRIPE_API_KEY=""
+```
+
+then reread and update supervisor.
+
 ## Discord Commands
 
 To create a customer record, open your Direct Message to Stripe Invoicer Bot, and send:

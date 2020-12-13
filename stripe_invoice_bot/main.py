@@ -2,6 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from .stripe_tools import *
+from datetime import datetime
 
 TOKEN = os.environ['DISCORD_TOKEN']
 approved = os.environ['DISCORD_APPROVED_BOT'].split(",")
@@ -47,18 +48,25 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	message_content = message.content
-	if message_content == "help":
+	message_data = {
+		"author": str(message.author),
+		"content": message.content,
+		"authorized": str(message.author) in approved
+	}
+	today = date.today()
+	if message_data['content'] == "help":
 		reply = "Commands:\nnew invoice [email] [amount]\nnew customer [name] [email]\nlist invoices\nlist customers"
 		await message.channel.send(reply)
-	elif str(message.author) in approved:
-		reply = task_router(message_content)
-		print(reply)
+	elif message_data['authorized'] == True:
+		reply = task_router(message_data['content'])
+		print(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) 
+		print(message_data)
 		await message.channel.send(reply)
 	else:
 		reply = "You are not authorized to use this app in this server."
-		message.channel.send(reply)
-		print(str(message.author) + ": " + reply)
+		# message.channel.send(reply)
+		print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+		print(message_data)
 
 def main():
 	client.run(TOKEN)

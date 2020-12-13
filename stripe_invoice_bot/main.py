@@ -2,6 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from .stripe_tools import *
+from .data_table import *
 from datetime import datetime
 
 TOKEN = os.environ['DISCORD_TOKEN']
@@ -10,29 +11,30 @@ approved = os.environ['DISCORD_APPROVED_BOT'].split(",")
 client = discord.Client()
 
 def task_router(message):
-        message_opts = message.split(" ")
-        help = {"Usage": "Commands:\nnew invoice [email] [amount]\nnew customer [email] [name]\nlist invoices\nlist customers"}
-        if message_opts[0] == "new":
-                if message_opts[1] == "invoice":
-                        customer = message_opts[2]
-                        amount = message_opts[3]
-                        name = customer_name(customer)
-                        description = "Tutoring session for %s" % (name)
-                        task = create_invoice(customer,amount,description)
-                elif message_opts[1] == "customer":
-                        name = " ".join(message_opts[3:len(message_opts)])
-                        email = message_opts[2]
-                        task = create_customer(name,email)
-        elif message_opts[0] == "send":
-                if message_opts[1] == "invoice":
+	message_opts = message.split(" ")
+	if message_opts[0] == "new":
+		if message_opts[1] == "invoice":
+			customer = message_opts[2]
+			amount = message_opts[3]
+			name = customer_name(customer)
+			description = "Tutoring session for %s" % (name)
+			task = create_invoice(customer,amount,description)
+		elif message_opts[1] == "customer":
+			name = " ".join(message_opts[3:len(message_opts)])
+			email = message_opts[2]
+			task = create_customer(name,email)
+	elif message_opts[0] == "send":
+		if message_opts[1] == "invoice":
                         invoice = message_opts[2]
                         task = send_invoice(invoice)
-        elif message_opts[0] == "list":
-                if message_opts[1] == "customers":
-                        task = list_customers()
-                elif message_opts[1] == "invoices":
-                        task = list_invoices()
-        return task
+	elif message_opts[0] == "list":
+		if message_opts[1] == "customers":
+			task_data = list_customers()
+			task = generate_table(task_data)
+		elif message_opts[1] == "invoices":
+			task_data = list_invoices()
+			task = generate_table(task_data)
+	return task
 #load_dotenv()
 @client.event
 async def on_ready():

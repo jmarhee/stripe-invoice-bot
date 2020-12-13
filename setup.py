@@ -13,6 +13,7 @@ entry_points = {
 },
 install_requires=[
 	"discord",
-	"stripe"
+	"stripe",
+	"tabulate"
 ],
 zip_safe=False)

@@ -53,10 +53,24 @@ then reread and update supervisor.
 
 ## Discord Commands
 
+You can list `invoices`, `items`, or `customers` using:
+
+```
+list ${resource}
+```
+
+and delete any resource using:
+
+```
+delete ${resource} ${resource_id}
+```
+
+which you can find the ID for using the above `list` command format.
+
 To create a customer record, open your Direct Message to Stripe Invoicer Bot, and send:
 
 ```
-new customer FirstLast customer@domain.com
+new customer customer@domain.com phonenumber FirstName LastName OtherData
 ```
 
 You will receive a response like:
@@ -67,10 +81,18 @@ Customer name (name@email.com) created with id cus_ID
 
 where `cus_ID` will be their customer ID, which you'll need to generate invoices.
 
+You can add items to to be invoiced by running:
+
+```
+new item customer_ID amount description
+```
+
+and add as many as you'd like before proceeding to generate a draft invoice.
+
 To generate a draft invoice, you can send the bot:
 
 ```
-new invoice cus_ID amount
+new invoice cus_ID
 ```
 
 when the invoice is ready to be sent, you can use the returned Invoice ID (`in_XXXXX`) to tell the bot to send to the email on file:
@@ -78,5 +100,3 @@ when the invoice is ready to be sent, you can use the returned Invoice ID (`in_X
 ```
 send invoice in_XXXX
 ```
-
-

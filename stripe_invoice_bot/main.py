@@ -79,7 +79,7 @@ async def on_message(message):
 	}
 	today = date.today()
 	if message_data['content'] == "help":
-		reply = "Commands:\nnew invoice [email] [amount]\nnew customer [name] [email]\nlist invoices\nlist customers"
+		reply = "Commands:\nnew invoice [customer]\nnew item [customer] [amount] [description]\nnew customer [email] [phone] [name, or other ID]\nlist [invoices,customers,items]"
 		await message.channel.send(reply)
 	elif message_data['authorized'] == True:
 		reply = task_router(message_data['content'])

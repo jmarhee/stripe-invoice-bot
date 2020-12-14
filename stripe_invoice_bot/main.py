@@ -1,6 +1,5 @@
 import os
 import discord
-from dotenv import load_dotenv
 from .stripe_tools import *
 from .data_table import *
 from datetime import datetime
@@ -57,7 +56,7 @@ def task_router(message):
 		elif message_opts[1] == "item":
 			task = delete_item(message_opts[2])
 	return task
-#load_dotenv()
+
 @client.event
 async def on_ready():
 	print(f'{client.user} has connected to Discord!')

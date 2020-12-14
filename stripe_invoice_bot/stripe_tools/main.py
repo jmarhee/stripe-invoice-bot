@@ -20,8 +20,8 @@ def list_customers():
 		customer_data.append(cust)
 	return customer_data
 
-def create_customer(name,email):
-	customer = stripe.Customer.create(name=name,email=email)
+def create_customer(name,email,phone):
+	customer = stripe.Customer.create(name=name,email=email,phone=phone)
 	return "Customer %s (%s) created with id %s" % (customer.name, customer.email, customer.id)
 
 def list_invoices():
@@ -33,7 +33,7 @@ def list_invoices():
 			"customer": invoice.customer, 
 			"email": invoice.customer_email, 
 			"name": invoice.customer_name, 
-			"total": invoice.total, 
+			"total": "$" + str((invoice.total / 100)), 
 			"status": invoice.status 
 		}
 		invoice_status.append(i)
@@ -53,14 +53,16 @@ def create_price(amount_due, customer):
 		)
 	return price.id
 
-def create_invoice_item(customer, amount_due):
+def create_invoice_item(customer, amount_due, description):
 	item = stripe.InvoiceItem.create(
 		customer=customer,
 		price=create_price(amount_due, customer),
+		description=description
 	)
 	return item
 
-def create_invoice(customer, amount_due, description):
+def fast_create_invoice(customer, amount_due, description):
+	#Creates an invoice for a newly created item at bill-time.
 	create_invoice_item(customer, amount_due)
 	invoice = stripe.Invoice.create(
 			customer=customer,
@@ -70,6 +72,17 @@ def create_invoice(customer, amount_due, description):
 		)
 	invoice_data = { "id": invoice.id, "customer_email": invoice.customer_email, "status": "DRAFT" }
 	return invoice_data
+
+def create_invoice(customer, description):
+	#Creates an invoice from all outstanding items (ideal for periodic invoicing of all charges that period).
+        invoice = stripe.Invoice.create(
+                        customer=customer,
+                        description=description,
+                        collection_method="send_invoice",
+                        days_until_due=7
+                )
+        invoice_data = { "id": invoice.id, "customer_email": invoice.customer_email, "status": "DRAFT" }
+        return invoice_data
 
 def send_invoice(invoice):
 	invoice_sent = stripe.Invoice.send_invoice(invoice)

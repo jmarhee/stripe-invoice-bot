@@ -7,7 +7,7 @@ author='jmarhee',
 author_email='jmarhee@interiorae.com',
 license='MIT',
 packages=['stripe_invoice_bot'],
-python_requires='>=3.8',
+python_requires='>=3.6',
 entry_points = {
 	'console_scripts': ['stripe-invoice-bot=stripe_invoice_bot.main:main']
 },

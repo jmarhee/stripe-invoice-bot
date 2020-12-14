@@ -46,6 +46,16 @@ def task_router(message):
 		elif message_opts[1] == "invoices":
 			task_data = list_invoices()
 			task = generate_table(task_data)
+		elif message_opts[1] == "items":
+			task_data = list_items()
+			task = generate_table(task_data)
+	elif message_opts[0] == "delete":
+		if message_opts[1] == "customer":
+			task = delete_customer(message_opts[2])
+		elif message_opts[1] == "invoice":
+			task = delete_invoice(message_opts[2])
+		elif message_opts[1] == "item":
+			task = delete_item(message_opts[2])
 	return task
 #load_dotenv()
 @client.event

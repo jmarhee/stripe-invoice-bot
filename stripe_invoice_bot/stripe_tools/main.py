@@ -6,8 +6,19 @@ from datetime import date
 stripe.api_key = os.environ['STRIPE_API_KEY']
 
 def customer_name(customer):
-        customer_ret = stripe.Customer.retrieve(customer)
-        return { "id": customer, "name": customer_ret.name, "email": customer_ret.email }
+	customer_ret = stripe.Customer.retrieve(customer)
+	customer = {
+		"id": customer_ret.id
+	}
+	if hasattr(customer_ret, 'name'):
+		customer['name'] = customer_ret.name
+	else:
+		customer['name'] = "N/A"
+	if hasattr(customer_ret, 'email'):
+		customer['email'] = customer_ret.email
+	else:
+		customer['email'] = "N/A"
+	return customer
 
 def list_customers():
 	customer_data = []
@@ -38,6 +49,20 @@ def list_invoices():
 		}
 		invoice_status.append(i)
 	return invoice_status	
+
+def list_items():
+	items = stripe.InvoiceItem.list()
+	item_status = []
+	for item in items['data']:
+		item_status = []
+		i = {
+			"id": item.id,
+			"customer": item.customer,
+			"description": item.description,
+			"amount": "$" + str((item.amount / 100))
+		}
+		item_status.append(i)
+	return item_status
 
 def date_billed():
 	today = date.today()
@@ -88,3 +113,15 @@ def send_invoice(invoice):
 	invoice_sent = stripe.Invoice.send_invoice(invoice)
 	sending = { "invoice": invoice, "email": invoice_sent.customer_email }
 	return sending
+
+def delete_customer(customer):
+	delete = stripe.Customer.delete(customer)
+	return delete
+
+def delete_invoice(invoice):
+	delete = stripe.Invoice.delete(invoice)
+	return delete
+
+def delete_item(item):
+	delete = stripe.InvoiceItem.delete(item)
+	return delete

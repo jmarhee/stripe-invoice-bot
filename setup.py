@@ -1,8 +1,8 @@
 from setuptools import setup
 setup(name='stripe-invoice-bot',
-version='0.0.1',
+version='0.0.2',
 description='Discord bot to create customers and generate invoices',
-url='https://git-central.openfunction.co/jmarhee/stripe-invoice-bot',
+url='https://github.com/jmarhee/stripe-invoice-bot',
 author='jmarhee',
 author_email='jmarhee@interiorae.com',
 license='MIT',
